@@ -1,45 +1,34 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text, Button } from "react-native";
 import React from "react";
-import Information from "./components/Information";
-import Welcome from "./components/Welcome";
-import TxtInput from "./components/TxtInput";
-import CustomComponent from "./components/CustomComponent";
-import Logo from "./components/Logo";
-import LotsOfGreeting from "./components/LotsOfGreeting";
-import Count from "./components/Count";
-import TextInput1 from "./components/TextInput1";
-import AlertExample from "./components/AlertExample";
-import ImageWithTextInput from "./components/ImageWithTextInput";
-import ButtonExample from "./components/ButtonExample";
-import Touchable_Example from "./components/Touchable_Example";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import HomeScreen from "./screens/HomeScreen";
+import AboutScreen from "./screens/AboutScreen";
+
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <View>
-      {/* <Information /> */}
-      {/* <Welcome/>       */}
-      {/* <TxtInput/> */}
-      {/* <CustomComponent/> */}
-      {/* <Logo/> */}
-      {/* <LotsOfGreeting/> */}
-      {/* <Count num={2} title="Click"/> */}
-      {/* <TextInput1/> */}
-      {/* <AlertExample/> */}
-      {/* <ImageWithTextInput/> */}
-      {/* <ButtonExample/> */}
-      <Touchable_Example/>
-
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator 
+       initialRouteName="Home"
+       screenOptions={{
+        headerStyle:{
+          backgroundColor :'#008b8b'
+        },
+        headerTintColor:'#ffff',
+        headerTitleStyle:{
+          fontWeight:'bold'
+        }
+       }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="About" component={AboutScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
 export default App;
-
-/* const styles = StyleSheet.create({
-  container:{
-      flex:1,
-      justifyContent:'center',
-      alignItems:'center'
-  }
-}) */
-
