@@ -1,80 +1,67 @@
-import { View, Text, Button } from 'react-native'
-import React from 'react'
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
+import { createDrawerNavigator} from '@react-navigation/drawer';
 
-import { NavigationContainer } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem
-} from '@react-navigation/drawer';
+import HomeScreen from './screens/HomeScreen';
+import SettingScreen from './screens/SettingsScreen';
 
-function Feed({ navigation }) {
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgb(255, 45, 85)',
+  },
+};
+
+
+const Tab = createBottomTabNavigator();
+
+function MyTab() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Feed Screen</Text>
-      <Button
-        title="Open Drawer"
-        onPress={() => navigation.openDrawer()}
-      />
-      <Button
-        title="Toggle Drawer"
-        onPress={() => navigation.toggleDrawer()}
-      />
-    </View>
-  );
-}
-
-function Article() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Article Screen</Text>
-    </View>
-  );
-}
-
-function CustomDrawerContent(props) {
-  return (
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="Close Drawer"
-        onPress={() => props.navigation.closeDrawer() }
-      />
-       <DrawerItem
-        label="Toggle Drawer"
-        onPress={() => props.navigation.toggleDrawer() }
-      />
-    </DrawerContentScrollView>
-  );
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Home') {
+            iconName = focused
+              ? 'ios-information-circle'
+              : 'ios-information-circle-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'ios-list-box' : 'ios-list';
+          }
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={SettingScreen} />
+    </Tab.Navigator>
+  )
 }
 
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        drawerStyle: {
-          backgroundColor: '#b0e0e6',
-          width: 240
-        }
-      }}
-      useLegacyImplementation
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    <Drawer.Navigator 
+      useLegacyImplementation       
     >
-      <Drawer.Screen name="Feed" component={Feed} />
-      <Drawer.Screen name="Article" component={Article} />
+      <Drawer.Screen name="Home" component={MyTab} />
+      <Drawer.Screen name="Setting" component={SettingScreen} />
     </Drawer.Navigator>
-  )
+  );
 }
 
-const App = () => {
+export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <MyDrawer />
     </NavigationContainer>
-  )
+  );
 }
-
-export default App
