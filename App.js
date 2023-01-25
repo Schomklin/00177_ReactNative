@@ -1,67 +1,67 @@
-import * as React from 'react';
-import { Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer,DefaultTheme } from '@react-navigation/native';
-import { createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  FlatList,
+  Image
+} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Item } from 'react-navigation-header-buttons';
 
-import HomeScreen from './screens/HomeScreen';
-import SettingScreen from './screens/SettingsScreen';
+const App = () => {
 
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: 'rgb(255, 45, 85)',
-  },
-};
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
+  const getArticles = async () => {
+    try {
+      const response = await fetch('https://newsapi.org/v2/top-headlines?country=th&apiKey=ab0d4aca4cea481e8157d31c68eb2b23');
+      const json = await response.json();
+      setData(json.articles)
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const Tab = createBottomTabNavigator();
+  useEffect(() => {
+    getArticles();
+  }, []);
 
-function MyTab() {
+  const _renderItem = ({ item }) => {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, flexDirection: 'row', margin: 5 }}>
+          <Image
+            resizeMode='cover' 
+            source={{ uri: item.urlToImage }}
+            style = {{ flex:1,width:'100%',height:'100%'}}
+          />
+          <View style={{width:200,margin:5}}>
+            <Text style={{fontSize:14,marginBottom:5}}>{item.title}</Text>
+            <Text style={{fontSize:10}}>{item.source.name}</Text>
+            <Text style={{fontSize:10,color:'red'}}>Publish:{item.publishedAt}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === 'Home') {
-            iconName = focused
-              ? 'ios-information-circle'
-              : 'ios-information-circle-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'ios-list-box' : 'ios-list';
-          }
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={SettingScreen} />
-    </Tab.Navigator>
+    <View style={{ flex: 1, padding: 24 }}>
+      {isLoading
+        ? <ActivityIndicator size="large" color="#0000ff" />
+        : (
+          <FlatList
+            data={data}
+            keyExtractor={item => item.title}
+            renderItem={_renderItem}
+          />
+        )
+      }
+    </View>
   )
 }
 
-const Drawer = createDrawerNavigator();
-
-function MyDrawer() {
-  return (
-    <Drawer.Navigator 
-      useLegacyImplementation       
-    >
-      <Drawer.Screen name="Home" component={MyTab} />
-      <Drawer.Screen name="Setting" component={SettingScreen} />
-    </Drawer.Navigator>
-  );
-}
-
-export default function App() {
-  return (
-    <NavigationContainer theme={MyTheme}>
-      <MyDrawer />
-    </NavigationContainer>
-  );
-}
+export default App
