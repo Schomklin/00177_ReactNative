@@ -1,67 +1,85 @@
+import * as React from 'react';
+import { View, Text, StyleSheet,SafeAreaView,Image} from 'react-native';
+
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import {
-  View,
-  Text,
-  ActivityIndicator,
-  FlatList,
-  Image
-} from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Item } from 'react-navigation-header-buttons';
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 
-const App = () => {
+import HomeScreen from './screens/HomeScreen';
+import ProductScreen from './screens/ProductScreen';
 
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
 
-  const getArticles = async () => {
-    try {
-      const response = await fetch('https://newsapi.org/v2/top-headlines?country=th&apiKey=ab0d4aca4cea481e8157d31c68eb2b23');
-      const json = await response.json();
-      setData(json.articles)
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgb(255, 45, 85)',
+  },
+};
 
-  useEffect(() => {
-    getArticles();
-  }, []);
 
-  const _renderItem = ({ item }) => {
-    return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, flexDirection: 'row', margin: 5 }}>
-          <Image
-            resizeMode='cover' 
-            source={{ uri: item.urlToImage }}
-            style = {{ flex:1,width:'100%',height:'100%'}}
-          />
-          <View style={{width:200,margin:5}}>
-            <Text style={{fontSize:14,marginBottom:5}}>{item.title}</Text>
-            <Text style={{fontSize:10}}>{item.source.name}</Text>
-            <Text style={{fontSize:10,color:'red'}}>Publish:{item.publishedAt}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
+function CustomDrawerContent(props) {
   return (
-    <View style={{ flex: 1, padding: 24 }}>
-      {isLoading
-        ? <ActivityIndicator size="large" color="#0000ff" />
-        : (
-          <FlatList
-            data={data}
-            keyExtractor={item => item.title}
-            renderItem={_renderItem}
-          />
-        )
-      }
-    </View>
-  )
+    <SafeAreaView style={{ flex: 1 }}>
+      {/*Top Large Image */}
+      <Image
+        source={require('./assets/react_logo.png')}
+        style={styles.sideMenuProfileIcon}
+      />
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem
+          label="Close drawer"
+          onPress={() => props.navigation.closeDrawer()}
+        />
+      </DrawerContentScrollView>
+    </SafeAreaView>
+  );
 }
 
-export default App
+const Drawer = createDrawerNavigator();
+function MyDrawer() {
+  return (
+    <Drawer.Navigator
+      useLegacyImplementation
+      screenOptions={{
+        drawerStyle: {
+          //backgroundColor: '#00bfff', //Set Drawer background
+          width: 250, //Set Drawer width
+        },
+        headerStyle: {
+          backgroundColor: '#5f9ea0', //Set Header color
+        },
+        headerTintColor: '#fff', //Set Header text color
+        headerTitleStyle: {
+          fontWeight: 'bold', //Set Header text style
+        }
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Product" component={ProductScreen} />
+    </Drawer.Navigator>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer theme={MyTheme}>
+      <MyDrawer />
+    </NavigationContainer>
+  );
+}
+const styles = StyleSheet.create({
+  sideMenuProfileIcon: {
+    resizeMode: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
+    alignSelf: 'center',
+  },
+})

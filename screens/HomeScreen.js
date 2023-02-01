@@ -16,16 +16,10 @@ const IoniconsHeaderButton = (props) => (
 );
 
 const HomeScreen = ({ navigation }) => {
-
   React.useEffect(() => {
     // Use `setOptions` to update the button that we previously specified
     // Now the button includes an `onPress` handler to update the count
     navigation.setOptions({
-      headerLeft: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          <Item title="menu" iconName="menu" onPress={() => alert('เมนูคำสั่ง')} />
-        </HeaderButtons>
-      ),
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item title="person-add" iconName="person-add" onPress={() => alert('ลงทะเบียน')} />
@@ -39,12 +33,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Ionicons name='home' size={40} color='#008b8b' />
       <Text>Home Screen</Text>
-      <Button
-        title="เกี่ยวกับเรา"
-        onPress={() => navigation.navigate("About", {
-          email: 'reactnative@tni.ac.th'
-        })}
-      />
+
     </View>
   );
 };
