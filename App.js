@@ -1,25 +1,24 @@
-import React from 'react';
-import { View, StyleSheet, Text} from 'react-native';
-import UseEffectFlatList from './components/UseEffectFlatList';
-import RandomUsersScreen from './components/RandomUsersScreen';
-
-
-
+import { View, Text ,StyleSheet} from 'react-native'
+import React from 'react'
+import FlastListAPI from './components/FlastListAPI'
+import News from './components/News'
 
 const App = () => {
   return (
     <View style={styles.container}>
-     {/* <UseEffectFlatList/>    */}
-     <RandomUsersScreen/>
+      {/* <FlastListAPI/> */}
+      <News/>
     </View>
-  );
-};
+  )
+}
+
+export default App
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
+  container:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
 
-export default App;
+  }
+})
