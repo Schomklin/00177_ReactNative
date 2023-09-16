@@ -1,8 +1,12 @@
-import 'react-native-gesture-handler';
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Linking} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 
 function Feed() {
   return (
@@ -20,17 +24,21 @@ function Article() {
   );
 }
 
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem label="Help" onPress={() => Linking.openURL('https://reactnative.dev/blog')} />
+    </DrawerContentScrollView>
+  );
+}
+
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        drawerStyle: {
-          backgroundColor: '#f0f8ff',
-          width: 240,
-        },
-      }}
+    <Drawer.Navigator      
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Feed" component={Feed} />
       <Drawer.Screen name="Article" component={Article} />

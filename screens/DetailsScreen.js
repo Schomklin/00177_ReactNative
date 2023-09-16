@@ -13,7 +13,7 @@ const DetailsScreen = ({ route,navigation }) => {
       <Text>otherParam: {JSON.stringify(otherParam)}</Text>
       <Text>{'\n'}</Text>
 
-      <Button
+{/*       <Button
         title='Go to Details...again'
         onPress={()=>
           navigation.push('Details',{
@@ -21,7 +21,7 @@ const DetailsScreen = ({ route,navigation }) => {
             otherParam: 'anything you want here'
           })
         }
-      />
+      /> */}
 
       <Button 
        title='Go to Home' 
